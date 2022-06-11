@@ -1,20 +1,44 @@
-import { getUserName } from './utils/login.js';
-import readline from 'readline';
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-const userName = getUserName();
-process.stdout.write(`Welcome to the File Manager, ${userName}!\n`);
+import { start, rl, logCurrentDir, getCommandArgs } from '../utils/index.js';
+import path from 'path';
+import { list } from '../fs/list.js';
 
-rl.on('line', async (msg) => {
-  const msgToString = msg.toString().trim();
-  const inputArgsArray = msgToString.split(' ');
-  const command = inputArgsArray[0];
-  switch (command) {
+start();
+rl.on('line', async (cmd) => {
+  const commandArgs = getCommandArgs(cmd);
+  switch (commandArgs.cmd) {
     case '.exit': {
       process.stdout.write(`Thank you for using File Manager, ${userName}`);
       process.exit();
     }
+    case 'cd': {
+      try {
+        process.chdir(`${commandArgs.arg}`);
+      } catch (err) {
+        console.error(`chdir: ${err}`);
+      }
+      logCurrentDir();
+      break;
+    }
+    case 'up': {
+      try {
+        process.chdir(`${path.join(process.cwd(), '..')}`);
+      } catch (err) {
+        console.error(`chdir: ${err}`);
+      }
+      logCurrentDir();
+      break;
+    }
+    case 'list': {
+      await list(process.cwd());
+      logCurrentDir();
+      break;
+    }
+    default: {
+      process.stdout.write('Invalid input\n');
+      logCurrentDir();
+    }
   }
+});
+rl.on('SIGINT', () => {
+  process.exit();
 });
