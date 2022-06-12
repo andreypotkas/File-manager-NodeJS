@@ -1,6 +1,6 @@
 import { start, rl, logCurrentDir, getCommandArgs } from '../utils/index.js';
 import path from 'path';
-import { list } from '../fs/list.js';
+import { create, list, read, rename, copy, remove } from '../fs/index.js';
 
 start();
 rl.on('line', async (cmd) => {
@@ -30,6 +30,37 @@ rl.on('line', async (cmd) => {
     }
     case 'list': {
       await list(process.cwd());
+      logCurrentDir();
+      break;
+    }
+    case 'cat': {
+      await read(process.cwd(), commandArgs.arg);
+      logCurrentDir();
+      break;
+    }
+    case 'add': {
+      await create(process.cwd(), commandArgs.arg);
+      logCurrentDir();
+      break;
+    }
+    case 'rn': {
+      await rename(process.cwd(), commandArgs.arg, commandArgs.arg1);
+      logCurrentDir();
+      break;
+    }
+    case 'cp': {
+      await copy(process.cwd(), commandArgs.arg, commandArgs.arg1);
+      logCurrentDir();
+      break;
+    }
+    case 'mv': {
+      await copy(process.cwd(), commandArgs.arg, commandArgs.arg1);
+      await remove(process.cwd(), commandArgs.arg, commandArgs.arg1);
+      logCurrentDir();
+      break;
+    }
+    case 'rm': {
+      await remove(process.cwd(), commandArgs.arg);
       logCurrentDir();
       break;
     }
