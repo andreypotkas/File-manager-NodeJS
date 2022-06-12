@@ -2,11 +2,27 @@ import path from 'path';
 import { rename as renameFile } from 'fs/promises';
 
 export async function rename() {
-  const pathFileRename = path.resolve(arguments[0], arguments[1]);
-  const newPathFileName = path.resolve(arguments[0], arguments[2]);
+  let pathFileRename = '';
+  let newPathFileName = '';
+  if (path.isAbsolute(arguments[1])) {
+    pathFileRename = arguments[1];
+    const pathToFileParts = arguments[1].split('\\');
+    const pathToFile = pathToFileParts
+      .slice(0, pathToFileParts.length - 1)
+      .join('\\');
+    newPathFileName = path.resolve(pathToFile, arguments[2]);
+  } else {
+    const fileNameParts = arguments[1].split('/');
+    const pathToFile = fileNameParts
+      .slice(0, fileNameParts.length - 1)
+      .join('');
+    pathFileRename = path.resolve(arguments[0], arguments[1]);
+    newPathFileName = path.resolve(arguments[0], pathToFile, arguments[2]);
+  }
+
   try {
-    renameFile(pathFileRename, newPathFileName);
+    await renameFile(pathFileRename, newPathFileName);
   } catch (err) {
-    throw new Error('FS operation failed');
+    console.log('Operation failed');
   }
 }

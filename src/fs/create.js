@@ -6,6 +6,6 @@ export async function create() {
   try {
     await fs.writeFile(pathUrl, '', { flag: 'wx' });
   } catch (err) {
-    throw new Error('FS operation failed');
+    console.log('Operation failed');
   }
 }

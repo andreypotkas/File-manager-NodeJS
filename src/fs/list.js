@@ -7,6 +7,6 @@ export const list = async (path) => {
       console.log(file);
     }
   } catch (err) {
-    throw new Error('FS operation failed');
+    console.log('Operation failed');
   }
 };

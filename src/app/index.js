@@ -6,9 +6,20 @@ import {
   getHomeDir,
   getUserName,
 } from '../os/index.js';
-import { create, list, read, rename, copy, remove } from '../fs/index.js';
+import {
+  create,
+  list,
+  read,
+  rename,
+  copy,
+  remove,
+  changeDirrectory,
+} from '../fs/index.js';
 import path from 'path';
-start();
+import { hash } from '../hash/hash.js';
+import { compress, decompress } from '../zip/index.js';
+
+const userName = start();
 rl.on('line', async (cmd) => {
   const commandArgs = getCommandArgs(cmd);
   switch (commandArgs.cmd) {
@@ -17,11 +28,7 @@ rl.on('line', async (cmd) => {
       process.exit();
     }
     case 'cd': {
-      try {
-        process.chdir(`${commandArgs.arg}`);
-      } catch (err) {
-        console.error(`chdir: ${err}`);
-      }
+      await changeDirrectory(commandArgs);
       logCurrentDir();
       break;
     }
@@ -29,19 +36,18 @@ rl.on('line', async (cmd) => {
       try {
         process.chdir(`${path.join(process.cwd(), '..')}`);
       } catch (err) {
-        console.error(`chdir: ${err}`);
+        console.error('Operation failed');
       }
       logCurrentDir();
       break;
     }
-    case 'list': {
+    case 'ls': {
       await list(process.cwd());
       logCurrentDir();
       break;
     }
     case 'cat': {
       await read(process.cwd(), commandArgs.arg);
-      logCurrentDir();
       break;
     }
     case 'add': {
@@ -93,6 +99,20 @@ rl.on('line', async (cmd) => {
       logCurrentDir();
       break;
     }
+    case 'hash': {
+      await hash(process.cwd(), commandArgs.arg);
+      break;
+    }
+    case 'compress': {
+      await compress(process.cwd(), commandArgs.arg, commandArgs.arg1);
+      logCurrentDir();
+      break;
+    }
+    case 'decompress': {
+      await decompress(process.cwd(), commandArgs.arg, commandArgs.arg1);
+      logCurrentDir();
+      break;
+    }
     default: {
       process.stdout.write('Invalid input\n');
       logCurrentDir();
@@ -100,5 +120,6 @@ rl.on('line', async (cmd) => {
   }
 });
 rl.on('SIGINT', () => {
+  process.stdout.write(`Thank you for using File Manager, ${userName}`);
   process.exit();
 });
