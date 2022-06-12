@@ -1,7 +1,13 @@
 import { start, rl, logCurrentDir, getCommandArgs } from '../utils/index.js';
-import path from 'path';
+import {
+  getArchitecture,
+  getCPUs,
+  getEOL,
+  getHomeDir,
+  getUserName,
+} from '../os/index.js';
 import { create, list, read, rename, copy, remove } from '../fs/index.js';
-
+import path from 'path';
 start();
 rl.on('line', async (cmd) => {
   const commandArgs = getCommandArgs(cmd);
@@ -61,6 +67,29 @@ rl.on('line', async (cmd) => {
     }
     case 'rm': {
       await remove(process.cwd(), commandArgs.arg);
+      logCurrentDir();
+      break;
+    }
+    case 'os': {
+      switch (commandArgs.arg.toString()) {
+        case '--EOL':
+          process.stdout.write(`${await getEOL()}\n`);
+          break;
+        case '--cpus':
+          await getCPUs();
+          break;
+        case '--homedir':
+          process.stdout.write(`${await getHomeDir()}\n`);
+          break;
+        case '--username':
+          process.stdout.write(`${await getUserName()}\n`);
+          break;
+        case '--architecture':
+          process.stdout.write(`${await getArchitecture()}\n`);
+          break;
+        default:
+          '';
+      }
       logCurrentDir();
       break;
     }
