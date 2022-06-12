@@ -105,7 +105,6 @@ rl.on('line', async (cmd) => {
     }
     case 'compress': {
       await compress(process.cwd(), commandArgs.arg, commandArgs.arg1);
-      logCurrentDir();
       break;
     }
     case 'decompress': {
