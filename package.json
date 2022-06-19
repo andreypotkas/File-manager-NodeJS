@@ -1,0 +1,20 @@
+{
+  "name": "file-manager-nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/app/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andreypotkas/File-manager-NodeJS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andreypotkas/File-manager-NodeJS/issues"
+  },
+  "homepage": "https://github.com/andreypotkas/File-manager-NodeJS#readme"
+}
